@@ -13,7 +13,7 @@ namespace Kinoteatr_bilet
     public partial class Administrator : Form
     {
 
-        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\Source\Repos\kinotesta\kinnoooo-main\AppData\Kino_DB.mdf;Integrated Security=True";
+        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\source\repos\Cinema\AppData\Kino_DB.mdf;Integrated Security=True";
         /*Надо менять            ↑ ↑ ↑ ↑ ↑ ↑ ↑  вот это, если ты пересел за другой комп!!!!!!!!!*/
         SqlConnection connect_to_DB = new SqlConnection(conn);
 
@@ -42,7 +42,7 @@ namespace Kinoteatr_bilet
             naita.Click += Film_naita_Click;
 
 
-            /*Button piletinaita = new Button
+            Button piletinaita = new Button
             {
                 Text = "PiletiNaita",
                 Location = new System.Drawing.Point(160, 25),//Point(x,y)
@@ -50,7 +50,7 @@ namespace Kinoteatr_bilet
                 Width = 100,
                 BackColor = Color.LightYellow
             };
-            piletinaita.Click += Piletinaita_Click;*/
+            piletinaita.Click += Piletinaita_Click;
 
 
             Button vexod = new Button
@@ -69,7 +69,8 @@ namespace Kinoteatr_bilet
                 Location = new System.Drawing.Point(600, 75),
                 Size = new System.Drawing.Size(80, 25),
                 Text = "Uuendamine",
-                Visible = false
+                Visible = false,
+                BackColor = Color.LightYellow
             };
             film_uuenda.Click += Film_uuenda_Click;
 
@@ -78,7 +79,8 @@ namespace Kinoteatr_bilet
                 Location = new System.Drawing.Point(600, 100),
                 Size = new System.Drawing.Size(80, 25),
                 Text = "Kustuta",
-                Visible = false
+                Visible = false,
+                BackColor = Color.Salmon
             };
             film_kustuta.Click += Film_kustuta_Click;
 
@@ -88,13 +90,14 @@ namespace Kinoteatr_bilet
                 Location = new System.Drawing.Point(600, 125),
                 Size = new System.Drawing.Size(80, 25),
                 Text = "Lisa uus",
-                Visible = false
+                Visible = false,
+                BackColor = Color.PaleGreen
             };
             film_insert.Click += Film_insert_Click;
 
             lbl1 = new Label
             {
-                Text = "Nimi",
+                Text = "Nimi:",
                 Size = new System.Drawing.Size(50, 25),
                 Location = new System.Drawing.Point(400, 75),
                 Font = new Font("Oswald", 8, FontStyle.Bold),
@@ -103,7 +106,7 @@ namespace Kinoteatr_bilet
 
             lbl2 = new Label
             {
-                Text = "Aasta",
+                Text = "Aasta:",
                 Size = new System.Drawing.Size(50, 25),
                 Location = new System.Drawing.Point(400, 100),
                 Font = new Font("Oswald", 8, FontStyle.Bold),
@@ -112,13 +115,13 @@ namespace Kinoteatr_bilet
 
             lbl3 = new Label
             {
-                Text = "Pilt",
+                Text = "Pilt:",
                 Size = new System.Drawing.Size(50, 25),
                 Location = new System.Drawing.Point(400, 125),
                 Font = new Font("Oswald", 8, FontStyle.Bold),
                 Visible = false
             };
-            //this.Controls.Add(piletinaita);
+            this.Controls.Add(piletinaita);
             this.Controls.Add(lbl1);
             this.Controls.Add(lbl2);
             this.Controls.Add(lbl3);
@@ -152,42 +155,64 @@ namespace Kinoteatr_bilet
             this.Hide();
         }
 
-        private void Piletinaita_Click(object sender, EventArgs e)
+        DataGridView dataGridView_p;
+        int chetpiletov = 0;
+        public void Piletinaita_Click(object sender, EventArgs e)
         {
-            connect_to_DB.Open();
-            DataTable tabel_p = new DataTable();
-            DataGridView dataGridView_p = new DataGridView();
-            DataSet dataset_p = new DataSet();
-            SqlDataAdapter adapter_p = new SqlDataAdapter("SELECT Rida,Koht,Film FROM [dbo].[Piletid]; SELECT Nimi FROM [dbo].[Film]", connect_to_DB);
-
-            //adapter_p.TableMappings.Add("Piletid", "Rida");
-            //adapter_p.TableMappings.Add("Filmid", "Filmi_nimetus");
-            //adapter_p.Fill(dataset_p);
-            adapter_p.Fill(tabel_p);
-            dataGridView_p.DataSource = tabel_p;
-            dataGridView_p.Location = new System.Drawing.Point(10, 170);
-            dataGridView_p.Size = new System.Drawing.Size(430, 200);
 
 
-            SqlDataAdapter adapter_f = new SqlDataAdapter("SELECT Nimi FROM [dbo].[Film]", connect_to_DB);
-            DataTable tabel_f = new DataTable();
-            DataSet dataset_f = new DataSet();
-            adapter_f.Fill(tabel_f);
-            /*fkc = new ForeignKeyConstraint(tabel_f.Columns["Id"], tabel_p.Columns["Film_Id"]);
-            tabel_p.Constraints.Add(fkc);*/
-            //poster.Image = Image.FromFile("../../Posterid/ezik.jpg");
-
-            DataGridViewComboBoxCell cbc = new DataGridViewComboBoxCell();
-            ComboBox com_f = new ComboBox();
-            foreach (DataRow row in tabel_f.Rows)
+            if (chetpiletov == 0)
             {
-                com_f.Items.Add(row["Nimi"]);
-                cbc.Items.Add(row["Nimi"]);
+                connect_to_DB.Open();
+                DataTable tabel_p = new DataTable();
+                dataGridView_p = new DataGridView();
+                DataSet dataset_p = new DataSet();
+                SqlDataAdapter adapter_p = new SqlDataAdapter("SELECT Rida,Koht,Film,Zaal FROM [dbo].[Piletid]; SELECT Nimi FROM [dbo].[Film]", connect_to_DB);
+
+                //adapter_p.TableMappings.Add("Piletid", "Rida");
+                //adapter_p.TableMappings.Add("Filmid", "Filmi_nimetus");
+                //adapter_p.Fill(dataset_p);
+                adapter_p.Fill(tabel_p);
+                dataGridView_p.DataSource = tabel_p;
+                dataGridView_p.Location = new System.Drawing.Point(10, 170);
+                dataGridView_p.Size = new System.Drawing.Size(430, 200);
+
+
+                SqlDataAdapter adapter_f = new SqlDataAdapter("SELECT Nimi FROM [dbo].[Film]", connect_to_DB);
+                DataTable tabel_f = new DataTable();
+                DataSet dataset_f = new DataSet();
+                adapter_f.Fill(tabel_f);
+                /*fkc = new ForeignKeyConstraint(tabel_f.Columns["Id"], tabel_p.Columns["Film_Id"]);
+                tabel_p.Constraints.Add(fkc);*/
+                //poster.Image = Image.FromFile("../../Posterid/ezik.jpg");
+
+                DataGridViewComboBoxCell cbc = new DataGridViewComboBoxCell();
+                ComboBox com_f = new ComboBox();
+                foreach (DataRow row in tabel_f.Rows)
+                {
+                    com_f.Items.Add(row["Nimi"]);
+                    cbc.Items.Add(row["Nimi"]);
+                }
+                cbc.Value = com_f;
+                connect_to_DB.Close();
+                this.Controls.Add(dataGridView_p);
+                this.Controls.Add(com_f);
+                chetpiletov++;
             }
-            cbc.Value = com_f;
-            connect_to_DB.Close();
-            this.Controls.Add(dataGridView_p);
-            this.Controls.Add(com_f);
+            else if (chetpiletov == 1)
+            {
+
+                ocistka_piletov();
+                OcistkaData();
+
+                chetpiletov = 0;
+            }
+            
+        }
+
+        private void ocistka_piletov()
+        {
+            dataGridView_p.Visible = false;
         }
 
         private void Film_insert_Click(object sender, EventArgs e)
@@ -274,7 +299,7 @@ namespace Kinoteatr_bilet
         int chet = 0;
         private void Film_naita_Click(object sender, EventArgs e)
         {
-            if (chet==0)
+            if (chet == 0)
             {
                 film_insert.Visible = true;
                 film_uuenda.Visible = true;
@@ -318,6 +343,8 @@ namespace Kinoteatr_bilet
                 lbl1.Visible = false;
                 lbl2.Visible = false;
                 lbl3.Visible = false;
+                OcistkaData();
+                ocistka_piletov();
 
                 chet = 0;
             }
@@ -332,14 +359,16 @@ namespace Kinoteatr_bilet
             dataGridView.DataSource = tabel;
             dataGridView.Location = new System.Drawing.Point(10, 75);
             dataGridView.Size = new System.Drawing.Size(400, 200);*/
-            
+
             this.Controls.Add(dataGridView);
             this.Controls.Add(film_txt);
             this.Controls.Add(aasta_txt);
             this.Controls.Add(poster_txt);
             this.Controls.Add(poster);
+
             //connect_to_DB.Close();
         }
+        
         public void Data()
         {
             connect_to_DB.Open();
@@ -351,12 +380,20 @@ namespace Kinoteatr_bilet
             dataGridView.DataSource = tabel;
             dataGridView.Location = new System.Drawing.Point(10, 170);
             dataGridView.Size = new System.Drawing.Size(430, 200);
+            
             connect_to_DB.Close();
+
+        }
+
+
+        public void OcistkaData()
+        {
+            dataGridView.Visible = false;
         }
         private void DataGridView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            
-            SqlDataAdapter sda = new SqlDataAdapter("SELECT * FROM [dbo].[Film] SET Pilt=@pilt", connect_to_DB);
+
+            poster.Visible = true;
             Id_film = Convert.ToInt32(dataGridView.Rows[e.RowIndex].Cells[0].Value.ToString());
             film_txt.Text = dataGridView.Rows[e.RowIndex].Cells[1].Value.ToString();
             aasta_txt.Text = dataGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
@@ -369,8 +406,8 @@ namespace Kinoteatr_bilet
             {
                 poster.Image = Image.FromFile(@"C:..\..\Posterid\" + dataGridView.Rows[e.RowIndex].Cells[3].Value.ToString());
             }
-            
-            
+
+
 
             //string v = dataGridView.Rows[e.RowIndex].Cells[5].Value.ToString();
             //comboBox1.SelectedIndex = Int32.Parse(v) - 1;
@@ -378,9 +415,10 @@ namespace Kinoteatr_bilet
 
         private void DisplayData()
         {
+
             connect_to_DB.Open();
             DataTable tabel = new DataTable();
-            adapter = new SqlDataAdapter("SELECT * FROM Film", connect_to_DB);//, Kategooria WHERE Toodetable.Kategooria_Id=Kategooria.Id
+            adapter = new SqlDataAdapter("SELECT * FROM Film", connect_to_DB);
             adapter.Fill(tabel);
             dataGridView.DataSource = tabel;
             connect_to_DB.Close();
@@ -389,7 +427,7 @@ namespace Kinoteatr_bilet
 
         private void ClearData()
         {
-            //Id = 0;
+            //Id_film = 0;
             film_txt.Text = "";
             aasta_txt.Text = "";
             poster_txt.Text = "";

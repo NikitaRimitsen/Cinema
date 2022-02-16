@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,14 +70,26 @@ namespace Kinoteatr_bilet
         {
             Zal_vaata uus_aken = new Zal_vaata(9, 9);//запускает пустую форму
             uus_aken.StartPosition = FormStartPosition.CenterScreen;
-            uus_aken.ShowDialog();
+            uus_aken.Show();
+            string mc = "3";
+            using (StreamWriter srb = new StreamWriter(@"..\..\zapiszala\Zal.txt", true))
+            {
+                srb.WriteLine(mc);
+            }
+            this.Hide();
         }
 
         private void Sred_btn_Click(object sender, EventArgs e)
         {
             Zal_vaata uus_aken = new Zal_vaata(7, 7);//запускает пустую форму
             uus_aken.StartPosition = FormStartPosition.CenterScreen;
-            uus_aken.ShowDialog();
+            uus_aken.Show();
+            string mc = "2";
+            using (StreamWriter srb = new StreamWriter(@"..\..\zapiszala\Zal.txt", true))
+            {
+                srb.WriteLine(mc);
+            }
+            this.Hide();
 
         }
 
@@ -84,7 +97,13 @@ namespace Kinoteatr_bilet
         {
             Zal_vaata uus_aken = new Zal_vaata(5, 5);//запускает пустую форму
             uus_aken.StartPosition = FormStartPosition.CenterScreen;
-            uus_aken.ShowDialog();
+            uus_aken.Show();
+            string mc = "1";
+            using (StreamWriter srb = new StreamWriter(@"..\..\zapiszala\Zal.txt", true))
+            {
+                srb.WriteLine(mc);
+            }
+            this.Hide();
         }
 
 

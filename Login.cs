@@ -28,7 +28,7 @@ namespace Kinoteatr_bilet
             UseSystemPasswordChar = true
 
     };
-        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\Source\Repos\kinotesta\kinnoooo-main\AppData\Kino_DB.mdf;Integrated Security=True";
+        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\source\repos\Cinema\AppData\Kino_DB.mdf;Integrated Security=True";
         /*Надо менять            ↑ ↑ ↑ ↑ ↑ ↑ ↑  вот это, если ты пересел за другой комп!!!!!!!!!*/
         SqlConnection connect_to_DB = new SqlConnection(conn);
 
@@ -107,7 +107,7 @@ namespace Kinoteatr_bilet
 
         private void Loginbutton_Click(object sender, EventArgs e)
         {
-            SqlConnection con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\Source\Repos\kinotesta\kinnoooo-main\AppData\Kino_DB.mdf;Integrated Security=True");
+            SqlConnection con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\source\repos\Cinema\AppData\Kino_DB.mdf;Integrated Security=True");
             SqlDataAdapter sda = new SqlDataAdapter("SELECT Count(*) FROM Login WHERE Username='" + login.Text + "' and Password ='" + password.Text +"'", con);
             DataTable dt = new DataTable();
             sda.Fill(dt);

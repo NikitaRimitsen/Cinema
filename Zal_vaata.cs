@@ -30,7 +30,7 @@ namespace Kinoteatr_bilet
         static List<Pilet> piletid;
         int k, r;
         static string[] read_kohad;
-        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\Source\Repos\kinotesta\kinnoooo-main\AppData\Kino_DB.mdf;Integrated Security=True";
+        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\source\repos\Cinema\AppData\Kino_DB.mdf;Integrated Security=True";
         /*Надо менять            ↑ ↑ ↑ ↑ ↑ ↑ ↑  вот это, если ты пересел за другой комп!!!!!!!!!*/
         SqlConnection connect_to_DB = new SqlConnection(conn);
 
@@ -40,6 +40,7 @@ namespace Kinoteatr_bilet
         public Zal_vaata()//пустая форма
         { }
         int zaal = 0;
+        int razmerzaal = 0;
 
         public string[] Ostu_piletid()
         {
@@ -50,6 +51,7 @@ namespace Kinoteatr_bilet
                 //int kogus = read_kohad.Length;
                 f.Close();*/
                 var proverkafilma = File.ReadLines(@"..\..\zapisfilma\Film.txt").Last();
+                var proverkazala = File.ReadLines(@"..\..\zapiszala\Zal.txt").Last();
                 if (proverkafilma == "Dzeltemene udachi")
                 {
 
@@ -65,10 +67,24 @@ namespace Kinoteatr_bilet
                 {
                     zaal = 3;
                 }
+                /*----*/
+                if (proverkazala == "1")
+                {
+
+                    razmerzaal = 1;
 
 
+                }
+                else if (proverkazala == "2")
+                {
+                    razmerzaal = 2;
+                }
+                else if (proverkazala == "3")
+                {
+                    razmerzaal = 3;
+                }
                 connect_to_DB.Open();
-                adapter = new SqlDataAdapter("SELECT * FROM [dbo].[Piletid] WHERE Film='" + zaal + "'", connect_to_DB);
+                adapter = new SqlDataAdapter("SELECT * FROM [dbo].[Piletid] WHERE Film='" + zaal + "'and Zaal='" + razmerzaal + "'", connect_to_DB);
                 DataTable tabel = new DataTable();
                 adapter.Fill(tabel);
                 read_kohad = new string[tabel.Rows.Count];
@@ -182,7 +198,23 @@ namespace Kinoteatr_bilet
                     zaal = 3;
                 }
 
+                /*------*///:)
+                var proverkazala = File.ReadLines(@"..\..\zapiszala\Zal.txt").Last();
+                if (proverkazala == "1")
+                {
 
+                    razmerzaal = 1;
+
+
+                }
+                else if (proverkazala == "2")
+                {
+                    razmerzaal = 2;
+                }
+                else if (proverkazala == "3")
+                {
+                    razmerzaal = 3;
+                }
 
                 connect_to_DB.Open();
                 var filmivaata = File.ReadLines(@"..\..\zapisfilma\Film.txt").Last();
@@ -192,10 +224,11 @@ namespace Kinoteatr_bilet
                 {
 
                     text += "\n" + "Rida: " + item.Rida + " Koht: " + item.Koht;
-                    command = new SqlCommand("INSERT INTO Piletid(Rida,Koht,Film) VALUES(@rida,@koht,@film)", connect_to_DB);
+                    command = new SqlCommand("INSERT INTO Piletid(Rida,Koht,Film,Zaal) VALUES(@rida,@koht,@film,@zaal)", connect_to_DB);
                     command.Parameters.AddWithValue("@rida", item.Rida);
                     command.Parameters.AddWithValue("@koht", item.Koht);
                     command.Parameters.AddWithValue("@film", zaal);
+                    command.Parameters.AddWithValue("@zaal", razmerzaal);
                     command.ExecuteNonQuery();
                 }
                 connect_to_DB.Close();
