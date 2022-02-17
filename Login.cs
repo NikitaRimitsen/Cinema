@@ -28,7 +28,7 @@ namespace Kinoteatr_bilet
             UseSystemPasswordChar = true
 
     };
-        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\source\repos\Cinema\AppData\Kino_DB.mdf;Integrated Security=True";
+        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\source\repos\Cinemaaa\AppData\Kino_DB.mdf;Integrated Security=True";
         /*Надо менять            ↑ ↑ ↑ ↑ ↑ ↑ ↑  вот это, если ты пересел за другой комп!!!!!!!!!*/
         SqlConnection connect_to_DB = new SqlConnection(conn);
 

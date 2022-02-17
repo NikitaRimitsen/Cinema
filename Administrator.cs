@@ -13,7 +13,7 @@ namespace Kinoteatr_bilet
     public partial class Administrator : Form
     {
 
-        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\source\repos\Cinema\AppData\Kino_DB.mdf;Integrated Security=True";
+        static string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\nikit\source\repos\Cinemaaa\AppData\Kino_DB.mdf;Integrated Security=True";
         /*Надо менять            ↑ ↑ ↑ ↑ ↑ ↑ ↑  вот это, если ты пересел за другой комп!!!!!!!!!*/
         SqlConnection connect_to_DB = new SqlConnection(conn);
 
@@ -23,9 +23,16 @@ namespace Kinoteatr_bilet
         Button film_uuenda;
         Button film_kustuta;
         Button film_insert;
+
+        Button pileti_update;
+        Button pileti_kustuta;
         Label lbl1;
         Label lbl2;
         Label lbl3;
+        Label lblpi1;
+        Label lblpi2;
+        Label lblpi3;
+        Label lblpi4;
         public Administrator()
         {
             this.ClientSize = new System.Drawing.Size(720, 500);
@@ -94,7 +101,30 @@ namespace Kinoteatr_bilet
                 BackColor = Color.PaleGreen
             };
             film_insert.Click += Film_insert_Click;
+            /*------------------------------------Button___Pileti------------------------*/
 
+            pileti_kustuta = new Button
+            {
+                Location = new System.Drawing.Point(600, 100),
+                Size = new System.Drawing.Size(80, 25),
+                Text = "Kustuta",
+                Visible = false,
+                BackColor = Color.Salmon
+            };
+            pileti_kustuta.Click += Pileti_kustuta_Click;
+
+            pileti_update = new Button
+            {
+                Location = new System.Drawing.Point(600, 75),
+                Size = new System.Drawing.Size(80, 25),
+                Text = "Uuendamine",
+                Visible = false,
+                BackColor = Color.LightYellow
+            };
+            pileti_update.Click += Pileti_update_Click;
+
+
+            /*-----Label____Filmi----*/
             lbl1 = new Label
             {
                 Text = "Nimi:",
@@ -121,15 +151,63 @@ namespace Kinoteatr_bilet
                 Font = new Font("Oswald", 8, FontStyle.Bold),
                 Visible = false
             };
+
+
+
+            /*-----------Label_____Pileti----------*/
+            lblpi1 = new Label
+            {
+                Text = "Rida:",
+                Size = new System.Drawing.Size(50, 25),
+                Location = new System.Drawing.Point(400, 75),
+                Font = new Font("Oswald", 8, FontStyle.Bold),
+                Visible = false
+            };
+
+            lblpi2 = new Label
+            {
+                Text = "Koht:",
+                Size = new System.Drawing.Size(50, 25),
+                Location = new System.Drawing.Point(400, 100),
+                Font = new Font("Oswald", 8, FontStyle.Bold),
+                Visible = false
+            };
+
+            lblpi3 = new Label
+            {
+                Text = "Film:",
+                Size = new System.Drawing.Size(50, 25),
+                Location = new System.Drawing.Point(400, 125),
+                Font = new Font("Oswald", 8, FontStyle.Bold),
+                Visible = false
+            };
+
+            lblpi4 = new Label
+            {
+                Text = "Zaal:",
+                Size = new System.Drawing.Size(50, 25),
+                Location = new System.Drawing.Point(400, 150),
+                Font = new Font("Oswald", 8, FontStyle.Bold),
+                Visible = false
+            };
+
+            /*------------Dobavlenie v formu*/
             this.Controls.Add(piletinaita);
             this.Controls.Add(lbl1);
             this.Controls.Add(lbl2);
             this.Controls.Add(lbl3);
+            /*--------:)--------*/
+            this.Controls.Add(lblpi1);
+            this.Controls.Add(lblpi2);
+            this.Controls.Add(lblpi3);
+            this.Controls.Add(lblpi4);
 
             this.Controls.Add(vexod);
             this.Controls.Add(film_insert);
             this.Controls.Add(film_uuenda);
             this.Controls.Add(film_kustuta);
+            this.Controls.Add(pileti_kustuta);
+            this.Controls.Add(pileti_update);
             this.Controls.Add(naita);
             /*TextBox nimi = new TextBox
             {
@@ -147,6 +225,54 @@ namespace Kinoteatr_bilet
             this.Controls.Add(film);*/
         }
 
+
+
+        private void Pileti_kustuta_Click(object sender, EventArgs e)
+        {
+            if (Id != 0)
+            {
+                command = new SqlCommand("DELETE Piletid WHERE Id=@Id", connect_to_DB);
+                connect_to_DB.Open();
+                command.Parameters.AddWithValue("@Id", Id);
+                command.ExecuteNonQuery();
+                connect_to_DB.Close();
+                ClearPiletidData();
+                DisplayPiletidData();
+                MessageBox.Show("Piletid on kustutatud");
+            }
+            else
+            {
+                MessageBox.Show("Piletid viga kustutamisega");
+            }
+        }
+
+        private void Pileti_update_Click(object sender, EventArgs e)
+        {
+            if (Rida_txt.Text != "" && Koht_txt.Text != "" && Film_txt.Text != "" && Zaal_txt.Text != "")
+            {
+                connect_to_DB.Open();
+                command = new SqlCommand("UPDATE Piletid  SET Rida=@rida,Koht=@koht,Film=@film,Zaal=@zaal WHERE Id=@Id", connect_to_DB);
+
+                command.Parameters.AddWithValue("@Id", Id);
+                command.Parameters.AddWithValue("@rida", Rida_txt.Text);
+                command.Parameters.AddWithValue("@koht", Koht_txt.Text);
+                command.Parameters.AddWithValue("@film", Film_txt.Text);
+                command.Parameters.AddWithValue("@zaal", Zaal_txt.Text);
+                command.ExecuteNonQuery();
+                connect_to_DB.Close();
+                ClearPiletidData();
+                DisplayPiletidData();
+                MessageBox.Show("Piletid uuendatud");
+
+            }
+            else
+            {
+                MessageBox.Show("Viga");
+            }
+        }
+
+
+        /*-------------------------------------------------*/
         private void Vexod_Click(object sender, EventArgs e)
         {
             Menu uus_aken = new Menu();//запускает пустую форму
@@ -157,57 +283,117 @@ namespace Kinoteatr_bilet
 
         DataGridView dataGridView_p;
         int chetpiletov = 0;
+        TextBox Rida_txt, Koht_txt, Film_txt, Zaal_txt;
         public void Piletinaita_Click(object sender, EventArgs e)
         {
 
 
             if (chetpiletov == 0)
             {
-                connect_to_DB.Open();
-                DataTable tabel_p = new DataTable();
-                dataGridView_p = new DataGridView();
-                DataSet dataset_p = new DataSet();
-                SqlDataAdapter adapter_p = new SqlDataAdapter("SELECT Rida,Koht,Film,Zaal FROM [dbo].[Piletid]; SELECT Nimi FROM [dbo].[Film]", connect_to_DB);
+                pileti_kustuta.Visible = true;
+                pileti_update.Visible = true;
 
-                //adapter_p.TableMappings.Add("Piletid", "Rida");
-                //adapter_p.TableMappings.Add("Filmid", "Filmi_nimetus");
-                //adapter_p.Fill(dataset_p);
-                adapter_p.Fill(tabel_p);
-                dataGridView_p.DataSource = tabel_p;
-                dataGridView_p.Location = new System.Drawing.Point(10, 170);
-                dataGridView_p.Size = new System.Drawing.Size(430, 200);
+                lblpi1.Visible = true;
+                lblpi2.Visible = true;
+                lblpi3.Visible = true;
+                lblpi4.Visible = true;
 
-
-                SqlDataAdapter adapter_f = new SqlDataAdapter("SELECT Nimi FROM [dbo].[Film]", connect_to_DB);
-                DataTable tabel_f = new DataTable();
-                DataSet dataset_f = new DataSet();
-                adapter_f.Fill(tabel_f);
-                /*fkc = new ForeignKeyConstraint(tabel_f.Columns["Id"], tabel_p.Columns["Film_Id"]);
-                tabel_p.Constraints.Add(fkc);*/
-                //poster.Image = Image.FromFile("../../Posterid/ezik.jpg");
-
-                DataGridViewComboBoxCell cbc = new DataGridViewComboBoxCell();
-                ComboBox com_f = new ComboBox();
-                foreach (DataRow row in tabel_f.Rows)
+                Rida_txt = new TextBox
                 {
-                    com_f.Items.Add(row["Nimi"]);
-                    cbc.Items.Add(row["Nimi"]);
-                }
-                cbc.Value = com_f;
-                connect_to_DB.Close();
-                this.Controls.Add(dataGridView_p);
-                this.Controls.Add(com_f);
+                    Location = new System.Drawing.Point(450, 75),
+                };
+                Koht_txt = new TextBox
+                {
+                    Location = new System.Drawing.Point(450, 100),
+                };
+                Film_txt = new TextBox
+                {
+                    Location = new System.Drawing.Point(450, 125),
+                };
+                Zaal_txt = new TextBox
+                {
+                    Location = new System.Drawing.Point(450, 150),
+                };
+
+                pileti_Data();
+
+                this.Controls.Add(Rida_txt);
+                this.Controls.Add(Koht_txt);
+                this.Controls.Add(Film_txt);
+                this.Controls.Add(Zaal_txt);
                 chetpiletov++;
             }
             else if (chetpiletov == 1)
             {
+                pileti_kustuta.Visible = false;
+                pileti_update.Visible = false;
+
+                Rida_txt.Visible = false;
+                Koht_txt.Visible = false;
+                Film_txt.Visible = false;
+                Zaal_txt.Visible = false;
+
+                lblpi1.Visible = false;
+                lblpi2.Visible = false;
+                lblpi3.Visible = false;
+                lblpi4.Visible = false;
 
                 ocistka_piletov();
-                OcistkaData();
+                //OcistkaData();
 
                 chetpiletov = 0;
             }
             
+        }
+
+
+        private void pileti_Data()
+        {
+            connect_to_DB.Open();
+            DataTable tabel_p = new DataTable();
+            dataGridView_p = new DataGridView();
+            dataGridView_p.RowHeaderMouseClick += DataGridView_p_RowHeaderMouseClick;
+            DataSet dataset_p = new DataSet();
+            SqlDataAdapter adapter_p = new SqlDataAdapter("SELECT * FROM [dbo].[Piletid]", connect_to_DB);
+
+            //adapter_p.TableMappings.Add("Piletid", "Rida");
+            //adapter_p.TableMappings.Add("Filmid", "Filmi_nimetus");
+            //adapter_p.Fill(dataset_p);
+            adapter_p.Fill(tabel_p);
+            dataGridView_p.DataSource = tabel_p;
+            dataGridView_p.Location = new System.Drawing.Point(10, 190);
+            dataGridView_p.Size = new System.Drawing.Size(550, 200);
+
+
+            SqlDataAdapter adapter_f = new SqlDataAdapter("SELECT Nimi FROM [dbo].[Film]", connect_to_DB);
+            DataTable tabel_f = new DataTable();
+            DataSet dataset_f = new DataSet();
+            adapter_f.Fill(tabel_f);
+            /*fkc = new ForeignKeyConstraint(tabel_f.Columns["Id"], tabel_p.Columns["Film_Id"]);
+            tabel_p.Constraints.Add(fkc);*/
+            //poster.Image = Image.FromFile("../../Posterid/ezik.jpg");
+
+            /*DataGridViewComboBoxCell cbc = new DataGridViewComboBoxCell();
+            ComboBox com_f = new ComboBox();
+            foreach (DataRow row in tabel_f.Rows)
+            {
+                com_f.Items.Add(row["Nimi"]);
+                cbc.Items.Add(row["Nimi"]);
+            }*/
+            //cbc.Value = com_f;
+            connect_to_DB.Close();
+            this.Controls.Add(dataGridView_p);
+            //this.Controls.Add(com_f);
+        }
+        int Id = 0;
+
+        private void DataGridView_p_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            Id = Convert.ToInt32(dataGridView_p.Rows[e.RowIndex].Cells[0].Value.ToString());
+            Rida_txt.Text = dataGridView_p.Rows[e.RowIndex].Cells[1].Value.ToString();
+            Koht_txt.Text = dataGridView_p.Rows[e.RowIndex].Cells[2].Value.ToString();
+            Film_txt.Text = dataGridView_p.Rows[e.RowIndex].Cells[3].Value.ToString();
+            Zaal_txt.Text = dataGridView_p.Rows[e.RowIndex].Cells[4].Value.ToString();
         }
 
         private void ocistka_piletov()
@@ -237,7 +423,7 @@ namespace Kinoteatr_bilet
                 catch (Exception)
                 {
 
-                    MessageBox.Show("Viga lisamisega");
+                    MessageBox.Show("Filmi viga lisamisega");
                 }
             }
             else
@@ -261,7 +447,7 @@ namespace Kinoteatr_bilet
             }
             else
             {
-                MessageBox.Show("Viga kustutamisega");
+                MessageBox.Show("Filmi viga kustutamisega");
             }
         }
 
@@ -344,7 +530,7 @@ namespace Kinoteatr_bilet
                 lbl2.Visible = false;
                 lbl3.Visible = false;
                 OcistkaData();
-                ocistka_piletov();
+                //ocistka_piletov();
 
                 chet = 0;
             }
@@ -386,6 +572,7 @@ namespace Kinoteatr_bilet
         }
 
 
+
         public void OcistkaData()
         {
             dataGridView.Visible = false;
@@ -425,6 +612,19 @@ namespace Kinoteatr_bilet
 
         }
 
+
+        private void DisplayPiletidData()
+        {
+
+            connect_to_DB.Open();
+            DataTable tabele = new DataTable();
+            adapter = new SqlDataAdapter("SELECT * FROM Piletid", connect_to_DB);
+            adapter.Fill(tabele);
+            dataGridView_p.DataSource = tabele;
+            connect_to_DB.Close();
+
+        }
+
         private void ClearData()
         {
             //Id_film = 0;
@@ -432,13 +632,18 @@ namespace Kinoteatr_bilet
             aasta_txt.Text = "";
             poster_txt.Text = "";
             //save.FileName = "";
-
             poster.Visible = false;
             //poster.Image = Image.FromFile("../../Posterid/ezik.jpg");
-
         }
 
+        private void ClearPiletidData()
+        {
+            Rida_txt.Text = "";
+            Koht_txt.Text = "";
+            Film_txt.Text = "";
+            Zaal_txt.Text = "";
 
+        }
 
     }
 }
